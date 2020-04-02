@@ -38,7 +38,7 @@ node 'appserver' {
 
     $requiredtools = ['gunicorn', 'supervisor', 'python-mysqldb', 'python-falcon']
     package { $requiredtools: 
-    ensure => installed,
+        ensure => installed,
     }
 
     file { '/opt/testapp':
@@ -74,8 +74,8 @@ node 'appserver' {
         require => Package['supervisor'],
     }
 
-    exec { 'reread-config':
-        command => '/usr/bin/supervisorctl reread',
+    exec { 'update-supervisor':
+        command => '/usr/bin/supervisorctl update',
         refreshonly => true,
     }
 
@@ -84,7 +84,10 @@ node 'appserver' {
         refreshonly => true,
     }
 
-    File['/etc/supervisor/conf.d/testapp.conf'] ~> Exec['reread-config'] ~> Exec['restart-application']
+    File['/etc/supervisor/conf.d/testapp.conf'] ~> Exec['update-supervisor']
+    File['/opt/testapp/testapp.py'] ~> Exec['restart-application']
+
+    #File['/etc/supervisor/conf.d/testapp.conf'] ~> Exec['update-supervisor'] ~> Exec['restart-application']
 
 }
 
