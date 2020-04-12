@@ -131,6 +131,5 @@ node 'database' {
     }
 
     File['/var/tmp/dbdump.sql'] ~> Exec['add-database'] ~> Exec['insert-dump'] ~> Exec['create-mysql-user']
-    File['mysql-network-config'] ~> Service['mysql']
 
 }

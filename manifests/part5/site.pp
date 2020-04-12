@@ -116,13 +116,11 @@ node 'database' {
         mode => '0644',
     }
 
-    File['mysql-network-config'] ~> Service['mysql']
-
 	mysql::db { 'puppet2020':
 	  user     => 'puppet2020',
 	  password => 'not-the-real-one',
 	  host     => '%',
-	  grant    => ['ALL'],
+	  grant    => ['SELECT'],
 	  sql      => '/var/tmp/dbdump.sql',
       require  => [Package['mysql-server'],File['/var/tmp/dbdump.sql']],
 	}
